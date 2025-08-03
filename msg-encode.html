@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secret Message Encoder</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #121212;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      max-width: 500px;
+      width: 90%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffcc;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background: #2a2a2a;
+      color: #ffffff;
+      resize: none;
+    }
+    button {
+      width: 48%;
+      padding: 10px;
+      margin: 1%;
+      background: #00ffcc;
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00bfa6;
+    }
+    .output {
+      margin-top: 15px;
+      word-wrap: break-word;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .copy {
+      background: transparent;
+      color: #00ffcc;
+      border: 1px solid #00ffcc;
+      margin-top: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🔐 Secret Message Tool</h2>
+    <textarea id="inputText" placeholder="Enter message to encode or decode..."></textarea>
+    <div>
+      <button onclick="encodeMessage()">Encode</button>
+      <button onclick="decodeMessage()">Decode</button>
+    </div>
+    <div class="output" id="outputText"></div>
+    <button class="copy" onclick="copyOutput()">📋 Copy Output</button>
+  </div>  <script>
+    function simpleEncrypt(text) {
+      let encoded = '';
+      for (let i = 0; i < text.length; i++) {
+        encoded += String.fromCharCode(text.charCodeAt(i) + 5);
+      }
+      return encoded;
+    }
+
+    function simpleDecrypt(text) {
+      let decoded = '';
+      for (let i = 0; i < text.length; i++) {
+        decoded += String.fromCharCode(text.charCodeAt(i) - 5);
+      }
+      return decoded;
+    }
+
+    function encodeMessage() {
+      const input = document.getElementById('inputText').value;
+      if (input.trim() === '') return;
+      const encoded = simpleEncrypt(input);
+      document.getElementById('outputText').innerText = encoded;
+    }
+
+    function decodeMessage() {
+      const input = document.getElementById('inputText').value;
+      if (input.trim() === '') return;
+      const decoded = simpleDecrypt(input);
+      document.getElementById('outputText').innerText = decoded;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById('outputText').innerText;
+      if (!output) return;
+      navigator.clipboard.writeText(output).then(() => {
+        alert('Copied to clipboard!');
+      });
+    }
+  </script></body>
+</html>
