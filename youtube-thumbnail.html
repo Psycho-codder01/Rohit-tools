@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Thumbnail Downloader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #141e30, #243b55);
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    input {
+      width: 90%;
+      max-width: 500px;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background-color: #00f2fe;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    img {
+      max-width: 100%;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    .download-button {
+      display: inline-block;
+      margin-top: 10px;
+      background: #28a745;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .error {
+      color: red;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>📸 YouTube Thumbnail Downloader</h1>
+  <input type="text" id="videoURL" placeholder="Paste YouTube video link..." />
+  <br>
+  <button onclick="getThumbnail()">Get Thumbnail</button>
+
+  <div id="thumbnailContainer"></div>
+  <div class="error" id="errorMsg"></div>
+
+  <script>
+    function extractVideoID(url) {
+      try {
+        const u = new URL(url);
+        if (u.hostname.includes('youtu.be')) return u.pathname.slice(1);
+        if (u.searchParams.has('v')) return u.searchParams.get('v');
+        if (u.pathname.includes('/embed/')) return u.pathname.split('/embed/')[1];
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
+    async function downloadImage(url, filename) {
+      try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch {
+        alert("❌ Couldn't download thumbnail.");
+      }
+    }
+
+    function getThumbnail() {
+      const input = document.getElementById("videoURL").value.trim();
+      const id = extractVideoID(input);
+      const container = document.getElementById("thumbnailContainer");
+      const error = document.getElementById("errorMsg");
+
+      container.innerHTML = '';
+      error.textContent = '';
+
+      if (!id || id.length !== 11) {
+        error.textContent = "❌ Invalid YouTube video URL.";
+        return;
+      }
+
+      const maxres = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+      const fallback = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+
+      const img = new Image();
+      img.src = maxres;
+
+      img.onload = () => showThumb(maxres);
+      img.onerror = () => {
+        img.src = fallback;
+        img.onload = () => showThumb(fallback);
+        img.onerror = () => error.textContent = "❌ Thumbnail not available.";
+      };
+
+      function showThumb(src) {
+        container.innerHTML = `
+          <img src="${src}" alt="Thumbnail" />
+          <br>
+          <button class="download-button" onclick="downloadImage('${src}', 'thumbnail.jpg')">⬇️ Download Thumbnail</button>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
