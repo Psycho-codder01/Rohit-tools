@@ -108,15 +108,22 @@
 
 <script>
   // 🔁 Replace with your Firebase config
+  <script>
   const firebaseConfig = {
-  apiKey: "AIzaSyExxx...YourRealKey...",
-  authDomain: "rohitchatapp.firebaseapp.com",
-  databaseURL: "https://rohitchatapp-default-rtdb.firebaseio.com",
-  projectId: "rohitchatapp",
-  storageBucket: "rohitchatapp.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abc123xyz"
-};
+    apiKey: "AIzaSyAWMOp9j0fIDdNa-JpVpISII",
+    authDomain: "privatechat-94f89.firebaseapp.com",
+    databaseURL: "https://privatechat-94f89-default-rtdb.firebaseio.com",
+    projectId: "privatechat-94f89",
+    storageBucket: "privatechat-94f89.appspot.com",
+    messagingSenderId: "36691440261",
+    appId: "1:36691440261:web:309f2cb51da076949bafec",
+    measurementId: "G-GNCX5SN2N9"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  ...
+</script>
   
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
