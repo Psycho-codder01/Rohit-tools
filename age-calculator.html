@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Age Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #1f1f2e, #2f2f4e);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }.calculator {
+  background: #33334d;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+h1 {
+  color: #ff6b81;
+}
+
+input[type="date"] {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+button {
+  background: #2ecc71;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #27ae60;
+}
+
+.result {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>🧮 Age Calculator</h1>
+    <input type="date" id="dob" />
+    <button onclick="calculateAge()">Calculate</button>
+    <div class="result" id="result"></div>
+  </div>  <script>
+    function calculateAge() {
+      const dob = document.getElementById('dob').value;
+      if (!dob) return;
+
+      const dobDate = new Date(dob);
+      const today = new Date();
+
+      let ageYears = today.getFullYear() - dobDate.getFullYear();
+      let ageMonths = today.getMonth() - dobDate.getMonth();
+      let ageDays = today.getDate() - dobDate.getDate();
+
+      if (ageDays < 0) {
+        ageMonths--;
+        ageDays += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      }
+      if (ageMonths < 0) {
+        ageYears--;
+        ageMonths += 12;
+      }
+
+      const result = `🎉 You are ${ageYears} years, ${ageMonths} months, and ${ageDays} days old.`;
+      document.getElementById('result').textContent = result;
+    }
+  </script></body>
+</html>
