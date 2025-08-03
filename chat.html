@@ -107,8 +107,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <script>
-  // 🔁 Replace with your Firebase config
-  
   const firebaseConfig = {
     apiKey: "AIzaSyAWMOp9j0fIDdNa-JpVpISII",
     authDomain: "privatechat-94f89.firebaseapp.com",
@@ -120,9 +118,6 @@
     measurementId: "G-GNCX5SN2N9"
   };
 
-
-</script>
-  
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
@@ -157,7 +152,6 @@
 
       if (typingData && typingData !== myCode) {
         status.style.display = "block";
-
         clearTimeout(typingTimeout);
         typingTimeout = setTimeout(() => {
           status.style.display = "none";
@@ -180,7 +174,7 @@
     });
 
     input.value = "";
-    input.focus(); // ✅ keeps keyboard open after send
+    input.focus();
     stopTyping();
     scrollBottom();
   }
@@ -198,7 +192,7 @@
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // 📱 WhatsApp-style keyboard adjustment for mobile
+  // WhatsApp-style keyboard handling
   let originalHeight = window.innerHeight;
   window.addEventListener("resize", () => {
     const currentHeight = window.innerHeight;
