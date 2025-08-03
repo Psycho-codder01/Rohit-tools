@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Case Converter Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      background: #111;
+      color: #00ffcc;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    textarea {
+      width: 90%;
+      max-width: 600px;
+      height: 150px;
+      border-radius: 10px;
+      padding: 1rem;
+      font-size: 1rem;
+      resize: vertical;
+      border: none;
+      outline: none;
+      background: #222;
+      color: #fff;
+    }
+
+    .buttons {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 16px;
+      background: #00ffcc;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00c9a7;
+    }
+
+    #output {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      background: #222;
+      padding: 1rem;
+      border-radius: 10px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔠 Case Converter Tool</h1>
+  <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+
+  <div class="buttons">
+    <button onclick="convert('upper')">UPPERCASE</button>
+    <button onclick="convert('lower')">lowercase</button>
+    <button onclick="convert('title')">Title Case</button>
+    <button onclick="convert('sentence')">Sentence case</button>
+    <button onclick="copyOutput()">📋 Copy</button>
+  </div>
+
+  <div id="output">Converted text will appear here...</div>
+
+  <script>
+    function convert(type) {
+      let text = document.getElementById("textInput").value;
+      let output = "";
+
+      switch (type) {
+        case 'upper':
+          output = text.toUpperCase();
+          break;
+        case 'lower':
+          output = text.toLowerCase();
+          break;
+        case 'title':
+          output = text
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+          break;
+        case 'sentence':
+          output = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+          break;
+      }
+
+      document.getElementById("output").textContent = output;
+    }
+
+    function copyOutput() {
+      const text = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard!");
+      });
+    }
+  </script>
+</body>
+</html>
