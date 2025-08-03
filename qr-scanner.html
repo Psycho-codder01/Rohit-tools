@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR & Barcode Scanner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0c0c1d;
+      color: #00ffcc;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    button, input[type="file"] {
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+      font-weight: bold;
+      background: #00ffcc;
+      color: #000;
+      cursor: pointer;
+    }
+
+    video, canvas, img {
+      max-width: 100%;
+      margin-top: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    #result {
+      background: #111;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📷 QR & Barcode Scanner</h1>
+
+  <button onclick="startCamera()">Start Camera Scan</button>
+  <input type="file" accept="image/*" onchange="scanImage(event)" />
+
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas" hidden></canvas>
+
+  <div id="result">Result: <span id="output">No data</span></div>
+
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <script>
+    const codeReader = new ZXing.BrowserMultiFormatReader();
+    const video = document.getElementById('video');
+    const output = document.getElementById('output');
+    const canvas = document.getElementById('canvas');
+
+    async function startCamera() {
+      try {
+        const devices = await codeReader.listVideoInputDevices();
+        const deviceId = devices[0].deviceId;
+
+        codeReader.decodeFromVideoDevice(deviceId, 'video', (result, err) => {
+          if (result) {
+            output.textContent = result.text;
+          } else if (err && !(err instanceof ZXing.NotFoundException)) {
+            output.textContent = 'Error: ' + err;
+          }
+        });
+      } catch (err) {
+        output.textContent = 'Camera error: ' + err;
+      }
+    }
+
+    function scanImage(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const img = new Image();
+        img.onload = function () {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+
+          const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
+          const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
+          try {
+            const result = new ZXing.MultiFormatReader().decode(binaryBitmap);
+            output.textContent = result.getText();
+          } catch (e) {
+            output.textContent = 'Unable to read QR/Barcode from image.';
+          }
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>
